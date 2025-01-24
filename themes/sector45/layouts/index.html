@@ -1,0 +1,67 @@
+{{ define "main" }}
+
+<div class="main-container">
+    <div class="controls">
+        <div class="category-filter">
+            <label for="category-select">Category:</label>
+            <select id="category-select">
+                <option value="all">All</option>
+                {{ range $category, $entries := .Site.Data }}
+                <option value="{{ $category }}">{{ $category | title }}</option>
+                {{ end }}
+            </select>
+        </div>
+        <div class="search-bar">
+            <input type="text" id="search" placeholder="Search here">
+        </div>
+    </div>
+
+    <table id="directory">
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Name</th>
+                <th>Phone Number</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ range $category, $entries := .Site.Data }}
+            {{ range $index, $entry := $entries }}
+            <tr>
+                <td>{{ $category | title }}</td>
+                <td>{{ $entry.name }}</td>
+                <td>{{ $entry.phone }}</td>
+            </tr>
+            {{ end }}
+            {{ end }}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    const searchInput = document.getElementById('search');
+    const categorySelect = document.getElementById('category-select');
+    const directoryTable = document.getElementById('directory').getElementsByTagName('tbody')[0];
+
+    function filterTable() {
+        const searchFilter = searchInput.value.toLowerCase();
+        const categoryFilter = categorySelect.value.toLowerCase();
+        const rows = directoryTable.getElementsByTagName('tr');
+
+        for (let row of rows) {
+            const cells = row.getElementsByTagName('td');
+            const categoryText = cells[0].textContent.toLowerCase();
+            const rowText = Array.from(cells).map(cell => cell.textContent.toLowerCase()).join(' ');
+
+            const matchesCategory = categoryFilter === 'all' || categoryText.includes(categoryFilter);
+            const matchesSearch = rowText.includes(searchFilter);
+
+            row.style.display = matchesCategory && matchesSearch ? '' : 'none';
+        }
+    }
+
+    searchInput.addEventListener('input', filterTable);
+    categorySelect.addEventListener('change', filterTable);
+</script>
+
+{{ end }}

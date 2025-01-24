@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .Site.Title }}</title>
+    <link rel="stylesheet" href="{{ "css/style.css" | relURL }}">
+	<link rel="icon" type="image/png" href="https://i.imgur.com/RbjLSAD.png"/>
+</head>
+<body>
+    {{ partial "header.html" . }}
+    <div class="container">
+        {{ block "main" . }}{{ end }}
+    </div>
+    {{ partial "footer.html" . }}
+</body>
+</html>
